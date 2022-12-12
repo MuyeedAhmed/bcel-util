@@ -26,7 +26,7 @@ public final class JvmUtil {
   }
 
   /** A map from Java primitive type name (such as "int") to field descriptor (such as "I"). */
-  private static HashMap<@PrimitiveType String, @FieldDescriptor String>
+  private static HashMap<String, String>
       primitiveToFieldDescriptor = new HashMap<>(8);
 
   static {
@@ -76,7 +76,7 @@ public final class JvmUtil {
    * @return name of the type, in field descriptor format
    * @throws IllegalArgumentException if primitiveName is not a valid primitive type name
    */
-  public static @FieldDescriptor String primitiveTypeNameToFieldDescriptor(String primitiveName) {
+  public static String primitiveTypeNameToFieldDescriptor(String primitiveName) {
     String result = primitiveToFieldDescriptor.get(primitiveName);
     if (result == null) {
       throw new IllegalArgumentException("Not the name of a primitive type: " + primitiveName);
@@ -204,7 +204,7 @@ public final class JvmUtil {
       throw new Error("Malformed arglist: " + arglist);
     }
     String result = "(";
-    @Positive int pos = 1;
+    int pos = 1;
     while (pos < arglist.length() - 1) {
       if (pos > 1) {
         result += ", ";

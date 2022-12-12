@@ -24,10 +24,10 @@ public final class SimpleLog {
   public boolean enabled;
 
   /** Where to write logging output. Null if nothing has been output yet. */
-  private @MonotonicNonNull PrintStream logfile;
+  private PrintStream logfile;
 
   /** The file for logging output. If null, System.out is used. */
-  private @Nullable String filename;
+  private String filename;
 
   /** The current indentation level. */
   private int indentLevel = 0;
@@ -37,7 +37,7 @@ public final class SimpleLog {
    * Cache for the current indentation string, or null if needs to be recomputed. Never access this
    * directly; always call {@link #getIndentString}.
    */
-  private @Nullable String indentString = null;
+  private String indentString = null;
   /** Cache of indentation strings that have been computed so far. */
   private List<String> indentStrings;
 
@@ -60,7 +60,7 @@ public final class SimpleLog {
    *
    * @param filename file name, or use "-" or null for System.out
    */
-  public SimpleLog(@Nullable String filename) {
+  public SimpleLog(String filename) {
     this(filename, true);
   }
 
@@ -70,7 +70,7 @@ public final class SimpleLog {
    * @param filename file name, or use "-" or null for System.out
    * @param enabled whether the logger starts out enabled
    */
-  public SimpleLog(@Nullable String filename, boolean enabled) {
+  public SimpleLog(String filename, boolean enabled) {
     this.filename = (filename != null && filename.equals("-")) ? null : filename;
     this.enabled = enabled;
     indentStrings = new ArrayList<String>();
@@ -95,7 +95,6 @@ public final class SimpleLog {
    * written.
    */
   @SuppressWarnings("builder:required.method.not.called") // a leak, but only of a single file
-  @EnsuresNonNull("logfile")
   private void setLogfile() {
     if (logfile != null) {
       return;
@@ -118,8 +117,7 @@ public final class SimpleLog {
    * @param format format string for message
    * @param args values to be substituted into format
    */
-  @FormatMethod
-  public void log(String format, @Nullable Object... args) {
+  public void log(String format, Object... args) {
     if (enabled) {
       setLogfile();
       logfile.print(getIndentString());

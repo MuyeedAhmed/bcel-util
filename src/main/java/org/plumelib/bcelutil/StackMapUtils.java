@@ -110,7 +110,7 @@ public abstract class StackMapUtils {
    * instructions covered by this StackMap. Set by update_stack_map_offset, find_stack_map_equal,
    * find_stack_map_index_before, or find_stack_map_index_after.
    */
-  protected @NonNegative int number_active_locals;
+  protected int number_active_locals;
 
   /**
    * Offset into code that corresponds to the current StackMap of interest. Set by
@@ -156,7 +156,6 @@ public abstract class StackMapUtils {
    * @param a the attribute
    * @return the attribute name for the specified attribute
    */
-  @Pure
   protected final String get_attribute_name(Attribute a) {
     int con_index = a.getNameIndex();
     Constant c = pool.getConstant(con_index);
@@ -170,7 +169,6 @@ public abstract class StackMapUtils {
    * @param a the attribute
    * @return true iff the attribute is a LocalVariableTypeTable
    */
-  @Pure
   protected final boolean is_local_variable_type_table(Attribute a) {
     return get_attribute_name(a).equals("LocalVariableTypeTable");
   }
@@ -181,7 +179,6 @@ public abstract class StackMapUtils {
    * @param a the attribute
    * @return true iff the attribute is a StackMapTable
    */
-  @Pure
   protected final boolean is_stack_map_table(Attribute a) {
     return get_attribute_name(a).equals("StackMapTable");
   }
@@ -192,7 +189,6 @@ public abstract class StackMapUtils {
    * @param mgen the method
    * @return the StackMapTable attribute for the method (or null if not present)
    */
-  @Pure
   protected final @Nullable Attribute get_stack_map_table_attribute(MethodGen mgen) {
     for (Attribute a : mgen.getCodeAttributes()) {
       if (is_stack_map_table(a)) {
@@ -208,7 +204,6 @@ public abstract class StackMapUtils {
    * @param mgen the method
    * @return the LocalVariableTypeTable attribute for the method (or null if not present)
    */
-  @Pure
   protected final @Nullable Attribute get_local_variable_type_table_attribute(MethodGen mgen) {
     for (Attribute a : mgen.getCodeAttributes()) {
       if (is_local_variable_type_table(a)) {
@@ -329,7 +324,7 @@ public abstract class StackMapUtils {
    * @param offset byte code offset
    * @return the corresponding StackMapEntry index
    */
-  protected final @IndexOrLow("stack_map_table") int find_stack_map_index_after(int offset) {
+  protected final int find_stack_map_index_after(int offset) {
 
     running_offset = -1; // no +1 on first entry
     for (int i = 0; i < stack_map_table.length; i++) {
@@ -544,7 +539,6 @@ public abstract class StackMapUtils {
    * @deprecated use {@link #set_current_stack_map_table}
    */
   @Deprecated // use set_current_stack_map_table() */
-  @InlineMe(replacement = "this.set_current_stack_map_table(mgen, java_class_version)")
   protected final void fetch_current_stack_map_table(MethodGen mgen, int java_class_version) {
     set_current_stack_map_table(mgen, java_class_version);
   }
@@ -739,7 +733,7 @@ public abstract class StackMapUtils {
    */
   protected final void update_full_frame_stack_map_entries(
       int offset, Type type_new_var, LocalVariableGen[] locals) {
-    @NonNegative int index; // locals index
+    int index; // locals index
 
     for (int i = 0; i < stack_map_table.length; i++) {
       if (stack_map_table[i].getFrameType() == Const.FULL_FRAME) {
@@ -786,7 +780,6 @@ public abstract class StackMapUtils {
    * @deprecated use {@link #add_new_parameter}
    */
   @Deprecated // use add_new_parameter()
-  @InlineMe(replacement = "this.add_new_parameter(mgen, arg_name, arg_type)")
   protected final LocalVariableGen add_new_argument(
       MethodGen mgen, String arg_name, Type arg_type) {
     return add_new_parameter(mgen, arg_name, arg_type);
@@ -920,7 +913,7 @@ public abstract class StackMapUtils {
     int new_offset = -1;
     // get a copy of the local before modification
     LocalVariableGen[] locals = mgen.getLocalVariables();
-    @IndexOrLow("locals") int compiler_temp_i = -1;
+    int compiler_temp_i = -1;
     int new_index = -1;
     int i;
 
